@@ -31,16 +31,17 @@ def video_to_images(video_file_name: str):
             frame_height = clip.size[1]
             # Get video width
             frame_width = clip.size[0]
-
-            # Calculate scale factor
-            scale_factor = frame_width / 1920
+            if frame_width > frame_height:
+                scale_factor = frame_width / 1920
+            else:
+                scale_factor = frame_height / 1920
 
             # Calculate new text position and size
-            text_size = 48 * scale_factor
+            text_size = 50 * scale_factor
             text_pos = ('center', frame_height - 100)
 
             # Create TextClip with new size and position
-            text_clip = (TextClip(text, font="黑體-簡-中黑", fontsize=text_size, color='yellow', stroke_color ="black", stroke_width=0.5*scale_factor)
+            text_clip = (TextClip(text, font="黑體-簡-中黑", fontsize=text_size, bg_color='black',color='yellow', stroke_width=0.25*scale_factor)
                 .set_duration(end_time - start_time)
                 .set_position(text_pos))
             frame = clip.get_frame(start_time)
