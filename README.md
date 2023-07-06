@@ -2,13 +2,16 @@
 
 適合將任何線上影片、課程壓制成一格一格播放的 PDF
 
-## Installation
+## pre-Installation
 
+需要先安裝 `moviepy`
 ```
 pip install moviepy
 ```
 
 ### 執行
+
+`python main.py xxx.mp4`
 
 * 需要兩個檔案 mp4, srt （不管有沒有內嵌字幕檔，都需要 srt 當時間參考點）
 * 將同名的 mp4 與同名的 srt 放在一起，執行 `python main.py xxx.mp4` 等待一定時間即會產生 pdf
