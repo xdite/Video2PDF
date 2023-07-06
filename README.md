@@ -30,3 +30,8 @@ pip install moviepy
 * 下載字幕工具：YouTube™ 雙字幕 https://chrome.google.com/webstore/detail/youtube-dual-subtitles/hkbdddpiemdeibjoknnofflfgbgnebcm?hl=zh-TW
 * 聽譯字幕工具：https://goodsnooze.gumroad.com/l/macwhisper
 * 翻譯字幕工具：https://translatesubtitles.co/
+
+
+### TODO
+
+[ ]雙語字幕
