@@ -45,12 +45,3 @@ def process_video_subs(video_name):
 
     # 儲存更新後的 csv 檔
     df.to_csv(f'{base_name}.csv', index=False)
-
-if __name__ == "__main__":
-    # 取得檔名
-    if len(sys.argv) != 2:
-        print("Usage: python script.py video_name")
-        exit()
-
-    video_name = sys.argv[1]
-    process_video_subs(video_name)
