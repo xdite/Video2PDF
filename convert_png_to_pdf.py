@@ -2,7 +2,7 @@ import os
 from PIL import Image
 
 def convert_png_to_pdf(input_directory, output_filename):
-    output_file = output_filename + '.pdf'
+    output_file = shlex.quote(output_filename) + '.pdf'
 
     # Collect all images
     images = []
