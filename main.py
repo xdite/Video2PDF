@@ -1,7 +1,7 @@
 import sys
 from transcript import process_video_subs
 from book import convert_png_to_pdf
-
+import os
 def main():
     # 取得檔名
     if len(sys.argv) != 2:

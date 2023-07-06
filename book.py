@@ -17,6 +17,7 @@ def convert_png_to_pdf(input_directory, output_filename):
                 img = img.convert("RGB")
             images.append(img)
 
+
     # Save all images to a single PDF file
     if images:
         images[0].save(output_file, "PDF" ,resolution=100.0, save_all=True, append_images=images[1:])
