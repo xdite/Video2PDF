@@ -66,6 +66,13 @@ def video_to_images(video_file_name: str):
 
     with open(zh_subtitle_file_name, "r") as f:
         zh_subtitles = f.read().split("\n\n")
+   # Create directory to store frames
+    try:
+        if not os.path.exists(base_name):
+            os.makedirs(base_name)
+    except OSError as e:
+        print(f"Failed to create directory: {base_name}. Error: {e}")
+        raise
 
     if os.path.exists(en_subtitle_file_name):
         with open(en_subtitle_file_name, "r") as f:
