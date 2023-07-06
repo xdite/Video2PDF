@@ -7,7 +7,12 @@ pip install moviepy
 
 ### 執行
 
-將同名的 mp4 與同名的 srt 放在一起，執行 `python main.py xxx.mp4` 等待一定時間即會產生 pdf
+* 需要兩個檔案 mp4, srt （不管有沒有內嵌字幕檔，都需要 srt 當時間參考點）
+* 將同名的 mp4 與同名的 srt 放在一起，執行 `python main.py xxx.mp4` 等待一定時間即會產生 pdf
+* 如果影片已經有預設 srt 不需 srt 壓制進去只需要檔參考點，請用 `python main.py xxx.mp4 --embed`
+
+
+### 注意事項
 
 * 檔案太大會遇到同時開啟個數限制
 * 先執行 `ulimit -n 4096` 可以解決

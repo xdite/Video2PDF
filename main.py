@@ -1,6 +1,6 @@
 import sys
 from transcript import process_video_subs
-from book import convert_png_to_pdf
+from convert_png_to_pdf import convert_png_to_pdf
 from video_to_image import video_to_images
 import os
 import argparse
