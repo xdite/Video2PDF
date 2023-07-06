@@ -5,7 +5,8 @@ from moviepy.editor import *
 # 從命令行獲取MP4檔案名稱
 video_file_name = sys.argv[1]
 # 由MP4檔案名稱產生對應的SRT檔案名稱
-subtitle_file_name = video_file_name.rsplit('.', 1)[0] + '.srt'
+base_name = video_file_name.rsplit('.', 1)[0]
+subtitle_file_name = base_name + '.srt'
 
 # Load your video
 clip = VideoFileClip(video_file_name)
@@ -18,8 +19,8 @@ with open(subtitle_file_name, "r") as f:
 subtitles = subtitles.split("\n\n")
 
 # 確保 images/ 目錄存在
-if not os.path.exists("images"):
-    os.makedirs("images")
+if not os.path.exists(base_name):
+    os.makedirs(base_name)
 
 from moviepy.editor import ImageClip
 
@@ -40,8 +41,11 @@ for i, subtitle in enumerate(subtitles):
         text = " ".join(parts[2:])
         # Create text clip
         #...
-        text_clip = TextClip(text, font="PingFang TC", fontsize=24, color='white').set_duration(end_time - start_time).set_position(('center', 'bottom'))
-        #.
+        frame_height = clip.size[1]  # Get the height of the video frame
+        text_pos = ('center', frame_height - 50)  # Calculate the position of the text
+
+        text_clip = TextClip(text, font="楷體-簡-黑體", fontsize=21, color='yellow').set_duration(end_time - start_time).set_position(text_pos)
+
 
         #text_clip = TextClip(text, fontsize=24, color='white').set_duration(end_time - start_time).set_position(('center', 'bottom'))
         # Get the frame at the start of the subtitle
@@ -51,4 +55,4 @@ for i, subtitle in enumerate(subtitles):
         # Overlay the subtitle on the frame
         final = CompositeVideoClip([frame_clip, text_clip])
         # Save the frame as an image
-        final.save_frame(f"images/frame_{i}.png")
+        final.save_frame(f"{base_name}/{i:04}.png")

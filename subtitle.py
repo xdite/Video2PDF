@@ -32,7 +32,7 @@ for subtitle in subtitles:
         text = " ".join(parts[2:])
         # Create text clip
         text_clip = TextClip(text, fontsize=24, color='white').set_pos(('center', 'bottom')).set_duration(end_time - start_time).set_start(start_time)
-        print(text_clip)
+        
         subs.append(text_clip)
 
 # Overlay subtitles on video
