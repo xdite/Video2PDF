@@ -38,4 +38,7 @@ pip install moviepy
 
 ### TODO
 
-[ ]雙語字幕
+- [x] 雙語字幕
+- [x] 多核 CPU 平行處理
+- [ ] 向量檢索
+- [ ] PDF searchable
