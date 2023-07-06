@@ -1,7 +1,7 @@
 import sys
 from transcript import process_video_subs
 from convert_png_to_pdf import convert_png_to_pdf
-from video_to_image import video_to_images
+from video_to_images import video_to_images
 import os
 import argparse
 
@@ -25,6 +25,7 @@ def main():
 
     # Convert screenshots to PDF
     convert_png_to_pdf(base_name, base_name)
-
+    os.system(f'open {base_name}.pdf')
+    
 if __name__ == "__main__":
     main()
