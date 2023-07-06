@@ -30,7 +30,13 @@ def process_subtitle(args):
             scale_factor = frame_height / 1920
 
         zh_text_size = 50 * scale_factor
-        zh_text_pos = ('center', frame_height - 100)
+
+        if frame_width > 640:
+            zh_text_pos = ('center', frame_height - 100)
+        else:
+            zh_text_pos = ('center', frame_height - 30)
+
+
 
         zh_text_clip = (TextClip(zh_text, font="黑體-簡-中黑", fontsize=zh_text_size, bg_color='black', color='yellow', stroke_width=0.25*scale_factor)
             .set_duration(end_time - start_time)
