@@ -31,7 +31,7 @@ def video_to_images(video_file_name: str):
             frame_height = clip.size[1]
             text_pos = ('center', frame_height - 100)
 
-            text_clip = TextClip(text, font="楷體-簡-黑體", fontsize=48, color='yellow', stroke_color ="black").set_duration(end_time - start_time).set_position(text_pos)
+            text_clip = TextClip(text, font="黑體-簡-中黑", fontsize=48, color='yellow', stroke_color ="black", stroke_width=0.5).set_duration(end_time - start_time).set_position(text_pos)
 
             frame = clip.get_frame(start_time)
             frame_clip = ImageClip(frame).set_duration(end_time - start_time)
