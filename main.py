@@ -1,20 +1,29 @@
 import sys
 from transcript import process_video_subs
 from book import convert_png_to_pdf
+from video_to_image import video_to_images
 import os
-def main():
-    # 取得檔名
-    if len(sys.argv) != 2:
-        print("Usage: python main.py video_name")
-        exit()
+import argparse
 
-    video_name = sys.argv[1]
+def main():
+    # Set up argument parser
+    parser = argparse.ArgumentParser(description="Process video and subtitles.")
+    parser.add_argument('video_name', help="Name of the video file to process.")
+    parser.add_argument('--embed', action='store_true', help="Use embedded subtitles.")
+
+    # Parse arguments
+    args = parser.parse_args()
+
+    # Determine base name
+    base_name = os.path.splitext(args.video_name)[0]
 
     # Process video subs and create screenshots
-    process_video_subs(video_name)
+    if args.embed:
+        process_video_subs(args.video_name) # with pre-embedd-sub
+    else:
+        video_to_images(args.video_name) # without pre-embedd-sub
 
     # Convert screenshots to PDF
-    base_name = os.path.splitext(video_name)[0]
     convert_png_to_pdf(base_name, base_name)
 
 if __name__ == "__main__":
