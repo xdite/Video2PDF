@@ -2,6 +2,7 @@ import os
 import sys
 from moviepy.editor import TextClip, ImageClip, CompositeVideoClip, VideoFileClip
 from multiprocessing import Pool, cpu_count
+from tqdm import tqdm
 
 def process_subtitle(args):
     i, subtitle, video_file_name, base_name = args
@@ -34,6 +35,8 @@ def process_subtitle(args):
         final = CompositeVideoClip([frame_clip, text_clip])
         final.save_frame(f"{base_name}/{i:04}.png")
 
+    return i
+
 def video_to_images(video_file_name: str):
     base_name = video_file_name.rsplit('.', 1)[0]
     subtitle_file_name = base_name + '.srt'
@@ -47,4 +50,5 @@ def video_to_images(video_file_name: str):
         os.makedirs(base_name)
 
     with Pool(cpu_count()) as pool:
-        pool.map(process_subtitle, [(i, subtitles[i], video_file_name, base_name) for i in range(len(subtitles))])
+        for _ in tqdm(pool.imap_unordered(process_subtitle, [(i, subtitles[i], video_file_name, base_name) for i in range(len(subtitles))]), total=len(subtitles)):
+            pass
