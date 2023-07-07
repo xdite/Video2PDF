@@ -1,5 +1,6 @@
 import os
 from PIL import Image
+import shutil
 
 def convert_png_to_pdf(input_directory, output_filename):
     output_file = output_filename + '.pdf'
@@ -23,6 +24,13 @@ def convert_png_to_pdf(input_directory, output_filename):
         images[0].save(output_file, "PDF" ,resolution=100.0, save_all=True, append_images=images[1:])
 
     print("Conversion from PNG to PDF is complete.")
+
+    # Delete the directory
+    try:
+        shutil.rmtree(input_directory)
+        print("Directory deleted successfully.")
+    except OSError as e:
+        print("Error: %s : %s" % (input_directory, e.strerror))
 
 # To use the function:
 # convert_png_to_pdf("/path/to/your/png/directory", "output_filename")
