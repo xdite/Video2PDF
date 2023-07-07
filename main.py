@@ -25,7 +25,7 @@ def main():
 
     # Convert screenshots to PDF
     convert_png_to_pdf(base_name, base_name)
-    os.system(f'open {base_name}.pdf')
+    os.system(f"open '{base_name}.pdf'")
 
 if __name__ == "__main__":
     main()
