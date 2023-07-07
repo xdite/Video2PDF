@@ -2,7 +2,7 @@ import os
 import sys
 import subprocess
 
-def get_video(url):
+def download_video(url):
     video_format = "18"  # This will download mp4 video in 640x360 resolution
     output_template = "%(title)s.%(ext)s"  # This will name the video file as "title.mp4"
 
@@ -41,11 +41,3 @@ def get_video(url):
 
     if os.path.exists(original_srt_filename):
         os.rename(original_srt_filename, desired_srt_filename)
-
-
-if __name__ == "__main__":
-    if len(sys.argv) != 2:
-        print(f"Usage: {sys.argv[0]} [youtube url]")
-        sys.exit(1)
-
-    get_video(sys.argv[1])
