@@ -37,7 +37,7 @@ def get_video(url):
     video_title = subprocess.check_output(["yt-dlp", "--get-filename", "-o", "%(title)s", url])
     video_title = video_title.decode("utf-8").strip()
     original_srt_filename = f"{video_title}.en-en.srt"
-    desired_srt_filename = f"{video_title}.en.srt"
+    desired_srt_filename = f"{video_title}.srt"
 
     if os.path.exists(original_srt_filename):
         os.rename(original_srt_filename, desired_srt_filename)
