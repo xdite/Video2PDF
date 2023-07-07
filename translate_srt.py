@@ -8,6 +8,7 @@ from tqdm import tqdm
 api_key = os.getenv('DEEPL_API_KEY')
 
 def translate_text(text, target_language='zh'):
+    text = text.replace("\h", " ")
     base_url = 'https://api.deepl.com/v2/translate'
     payload = {
         'auth_key': api_key,

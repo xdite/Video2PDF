@@ -13,7 +13,7 @@ if __name__ == "__main__":
     # 擷取影片和字幕檔案
     file_name = download_video(sys.argv[1])
     # xxx.en.srt
-    
+    translate_srt_file(file_name)
     # 取得影片檔案名稱和基本名稱
 
     video_file_name = file_name.replace("en.srt", "mp4")
