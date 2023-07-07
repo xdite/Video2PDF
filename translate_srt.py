@@ -2,11 +2,12 @@ import requests
 import pysrt
 import concurrent.futures
 import os
+from tqdm import tqdm
 
 # Your DeepL API key from the environment variable
 api_key = os.getenv('DEEPL_API_KEY')
 
-def translate_text(text, target_language='en'):
+def translate_text(text, target_language='zh'):
     base_url = 'https://api.deepl.com/v2/translate'
     payload = {
         'auth_key': api_key,
@@ -17,7 +18,6 @@ def translate_text(text, target_language='en'):
     if response.status_code != 200:
         raise Exception('DeepL request failed with status code {}'.format(response.status_code))
     translated_text = response.json()['translations'][0]['text']
-    print(translate_text)
     return translated_text
 
 def translate_srt_file(file_path, target_language='zh'):
@@ -27,7 +27,7 @@ def translate_srt_file(file_path, target_language='zh'):
     # Translate each subtitle
     with concurrent.futures.ThreadPoolExecutor() as executor:
         future_to_sub = {executor.submit(translate_text, sub.text, target_language): sub for sub in subs}
-        for future in concurrent.futures.as_completed(future_to_sub):
+        for future in tqdm(concurrent.futures.as_completed(future_to_sub), total=len(subs), desc='Translating subtitles'):
             sub = future_to_sub[future]
             try:
                 translated_text = future.result()
@@ -36,7 +36,4 @@ def translate_srt_file(file_path, target_language='zh'):
                 print('%r generated an exception: %s' % (sub, exc))
 
     # Save the translated .srt file
-    subs.save(file_path.replace('.en.srt', '.zh.srt'), encoding='utf-8')
-
-# Translate an .srt file to English
-#translate_srt_file('JaVBG7tFAU8_zh_Hans.srt', 'zh')
+    subs.save(file_path.replace('en.srt', 'zh.srt'), encoding='utf-8')
