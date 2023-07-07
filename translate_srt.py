@@ -36,7 +36,7 @@ def translate_srt_file(file_path, target_language='zh'):
                 print('%r generated an exception: %s' % (sub, exc))
 
     # Save the translated .srt file
-    subs.save(file_path.replace('.srt', '.zh.srt'), encoding='utf-8')
+    subs.save(file_path.replace('.en.srt', '.zh.srt'), encoding='utf-8')
 
 # Translate an .srt file to English
-translate_srt_file('JaVBG7tFAU8_zh_Hans.srt', 'zh')
+#translate_srt_file('JaVBG7tFAU8_zh_Hans.srt', 'zh')
