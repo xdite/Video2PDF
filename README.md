@@ -49,5 +49,6 @@ pip install moviepy
 
 - [x] 雙語字幕
 - [x] 多核 CPU 平行處理
+- [ ] Streamlit UI 介面
 - [ ] 向量檢索
 - [ ] PDF searchable
