@@ -23,8 +23,10 @@ def download_video(url):
     video_title = video_title.decode("utf-8").strip()
     video_filename = f"{video_title}.mp4"
 
+    print(video_filename)
     # Call the generate_srt function
     generate_srt(video_filename)
+
 
     return video_filename
 
