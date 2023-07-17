@@ -3,7 +3,8 @@ import pysrt
 import concurrent.futures
 import os
 from tqdm import tqdm
-
+import sys
+import chardet
 # Your DeepL API key from the environment variable
 api_key = os.getenv('DEEPL_API_KEY')
 
@@ -23,7 +24,11 @@ def translate_text(text, target_language='zh'):
 
 def translate_srt_file(file_path, target_language='zh'):
     # Load the .srt file
-    subs = pysrt.open(file_path)
+
+    with open(file_path, 'rb') as f:
+        result = chardet.detect(f.read())
+
+    subs = pysrt.open(file_path, encoding=result['encoding'])
 
     # Translate each subtitle
     with concurrent.futures.ThreadPoolExecutor() as executor:
@@ -37,4 +42,12 @@ def translate_srt_file(file_path, target_language='zh'):
                 print('%r generated an exception: %s' % (sub, exc))
 
     # Save the translated .srt file
-    subs.save(file_path.replace('en.srt', 'zh.srt'), encoding='utf-8')
+    subs.save(file_path.replace('.srt', '.zh.srt'), encoding='utf-8')
+
+
+if __name__ == "__main__":
+    if len(sys.argv) != 2:
+        print(f"Usage: {sys.argv[0]} filename")
+        sys.exit(1)
+
+    translate_srt_file(sys.argv[1])

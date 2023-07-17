@@ -5,3 +5,7 @@
 *.csv
 *.srt
 __pycache__/
+*.tsv
+*.json
+*.txt
+*.vtt
