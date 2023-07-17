@@ -2,6 +2,7 @@ import os
 from moviepy.editor import TextClip, ImageClip, CompositeVideoClip, VideoFileClip
 from multiprocessing import Pool, cpu_count
 from tqdm import tqdm
+os.environ['SDL_AUDIODRIVER'] = 'dummy'
 
 def process_subtitle(args):
     i, zh_subtitle, video_file_name, base_name = args
