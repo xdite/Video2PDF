@@ -1,6 +1,6 @@
 import os
 from moviepy.editor import TextClip, ImageClip, CompositeVideoClip, VideoFileClip
-from multiprocessing import Pool, cpu_count
+import concurrent.futures
 from tqdm import tqdm
 os.environ['SDL_AUDIODRIVER'] = 'dummy'
 
@@ -66,6 +66,5 @@ def video_to_images(video_file_name: str):
         print(f"Failed to create directory: {base_name}. Error: {e}")
         raise
 
-    with Pool(cpu_count()* 3) as pool:
-        for _ in tqdm(pool.imap_unordered(process_subtitle, [(i, zh_subtitles[i], video_file_name, base_name) for i in range(len(zh_subtitles))]), total=len(zh_subtitles)):
-            pass
+    with concurrent.futures.ThreadPoolExecutor() as executor:
+        list(tqdm(executor.map(process_subtitle, [(i, zh_subtitles[i], video_file_name, base_name) for i in range(len(zh_subtitles))]), total=len(zh_subtitles)))
