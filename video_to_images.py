@@ -16,6 +16,10 @@ def process_subtitle(args):
         end_time = times[1].split(":")
         start_time = int(start_time[0])*3600 + int(start_time[1])*60 + float(start_time[2].replace(",", "."))
         end_time = int(end_time[0])*3600 + int(end_time[1])*60 + float(end_time[2].replace(",", "."))
+
+        # Calculate the mid-point of the subtitle time range
+        mid_time = start_time + ((end_time - start_time) / 2)
+
         zh_text = " ".join(zh_parts[2:])
 
         frame_height = clip.size[1]
@@ -33,16 +37,17 @@ def process_subtitle(args):
             zh_text_pos = ('center', frame_height - 30)
 
         zh_text_clip = (TextClip(zh_text, font="黑體-簡-中黑", fontsize=zh_text_size, bg_color='black', color='yellow', stroke_width=0.25*scale_factor)
-            .set_duration(end_time - start_time)
+            .set_duration(end_time - mid_time)  # Update duration to be from mid_time to end_time
             .set_position(zh_text_pos))
 
-        frame = clip.get_frame(start_time)
-        frame_clip = ImageClip(frame).set_duration(end_time - start_time)
+        frame = clip.get_frame(mid_time)  # Get the frame at mid_time instead of start_time
+        frame_clip = ImageClip(frame).set_duration(end_time - mid_time)
 
         final = CompositeVideoClip([frame_clip, zh_text_clip])
         final.save_frame(f"{base_name}/{i:04}.png")
 
     return i
+
 
 
 def video_to_images(video_file_name: str):

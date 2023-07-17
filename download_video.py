@@ -29,7 +29,8 @@ def generate_srt(video_filename):
     # Generate srt using whisper-ctranslate2
     command_srt = [
         "whisper-ctranslate2",
-        "--threads", "8",
+        "--threads", "16",
+        "--output_format", "srt",
         video_filename,
     ]
 
