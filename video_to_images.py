@@ -18,7 +18,7 @@ def process_subtitle(args):
         end_time = int(end_time[0])*3600 + int(end_time[1])*60 + float(end_time[2].replace(",", "."))
 
         # Calculate the mid-point of the subtitle time range
-        mid_time = start_time + ((end_time - start_time) / 2)
+        mid_time = start_time + ((end_time - start_time) / 3)
 
         zh_text = " ".join(zh_parts[2:])
 
