@@ -36,7 +36,7 @@ def generate_srt(video_filename):
     print("This notebook has access to {} cores".format(num_cores))
     command_srt = [
         "whisper-ctranslate2",
-        "--threads", num_cores ,
+        "--threads", str(num_cores) ,
         "--output_format", "srt",
         video_filename,
     ]
