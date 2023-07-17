@@ -4,8 +4,7 @@ from download_video import download_video
 from translate_srt import translate_srt_file
 from video_to_images import video_to_images
 from convert_png_to_pdf import convert_png_to_pdf
-import glob
-from google.colab import files
+
 
 
 if __name__ == "__main__":
@@ -31,9 +30,3 @@ if __name__ == "__main__":
 
     # 轉換圖片為PDF
     convert_png_to_pdf(base_name, base_name)
-
-    # 開啟PDF
-    pdf_files = glob.glob('*.pdf')
-
-    for pdf_file in pdf_files:
-        files.download(pdf_file)
