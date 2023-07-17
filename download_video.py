@@ -1,4 +1,7 @@
 import subprocess
+import os
+import multiprocessing
+
 
 def download_video(url):
     video_format = "18"  # This will download mp4 video in 640x360 resolution
@@ -27,9 +30,11 @@ def download_video(url):
 
 def generate_srt(video_filename):
     # Generate srt using whisper-ctranslate2
+    num_cores = multiprocessing.cpu_count()
+
     command_srt = [
         "whisper-ctranslate2",
-        "--threads", "8",
+        "--threads", num_cores ,
         "--output_format", "srt",
         video_filename,
     ]
