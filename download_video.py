@@ -31,7 +31,7 @@ def download_video(url):
 def generate_srt(video_filename):
     # Generate srt using whisper-ctranslate2
     num_cores = multiprocessing.cpu_count()
-
+    print("This notebook has access to {} cores".format(num_cores))
     command_srt = [
         "whisper-ctranslate2",
         "--threads", num_cores ,
