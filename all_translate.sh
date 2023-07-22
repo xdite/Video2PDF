@@ -11,6 +11,6 @@ do
     echo "Processing file: $i"
 
     # run python script
-    python3 main.py "$i"
+    python3 translate_srt.py "$i"
   fi
 done
