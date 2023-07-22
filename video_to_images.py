@@ -2,6 +2,8 @@ import os
 from moviepy.editor import TextClip, ImageClip, CompositeVideoClip, VideoFileClip
 from multiprocessing import Pool, cpu_count
 from tqdm import tqdm
+import subprocess
+import json
 
 def get_video_dimensions(video_path):
 
@@ -40,7 +42,7 @@ def process_subtitle(args):
 
         zh_text = " ".join(zh_parts[2:])
         frame_width, frame_height = get_video_dimensions(video_file_name)
-        
+
         if frame_width > frame_height:
             scale_factor = frame_width / 1920
         else:
@@ -58,7 +60,8 @@ def process_subtitle(args):
             .set_position(zh_text_pos))
 
         frame = clip.get_frame(mid_time)  # Get the frame at mid_time instead of start_time
-        frame_clip = ImageClip(frame).set_duration(end_time - mid_time)
+        frame_clip = ImageClip(frame).set_duration(end_time - mid_time).resize((frame_width, frame_height))
+
 
         final = CompositeVideoClip([frame_clip, zh_text_clip])
         final.save_frame(f"{base_name}/{i:04}.png")
