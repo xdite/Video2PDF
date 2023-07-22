@@ -3,6 +3,24 @@ from moviepy.editor import TextClip, ImageClip, CompositeVideoClip, VideoFileCli
 from multiprocessing import Pool, cpu_count
 from tqdm import tqdm
 
+def get_video_dimensions(video_path):
+
+    # 处理 16:9
+    cmd = ["ffprobe", "-v", "error", "-select_streams", "v:0",
+           "-show_entries", "stream=width,height,sample_aspect_ratio", "-of", "json", video_path]
+    output = subprocess.check_output(cmd).decode("utf-8")
+    dimensions = json.loads(output)["streams"][0]
+
+    width = dimensions["width"]
+    height = dimensions["height"]
+    sar = dimensions.get("sample_aspect_ratio", "1:1").split(":")
+    sar = float(sar[0]) / float(sar[1])
+
+    # Calculate display width based on sample aspect ratio
+    display_width = int(width * sar)
+
+    return display_width, height
+
 def process_subtitle(args):
     i, zh_subtitle, video_file_name, base_name = args
 
@@ -21,9 +39,8 @@ def process_subtitle(args):
         mid_time = start_time + ((end_time - start_time) / 3)
 
         zh_text = " ".join(zh_parts[2:])
-
-        frame_height = clip.size[1]
-        frame_width = clip.size[0]
+        frame_width, frame_height = get_video_dimensions(video_file_name)
+        
         if frame_width > frame_height:
             scale_factor = frame_width / 1920
         else:
