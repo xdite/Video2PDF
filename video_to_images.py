@@ -2,7 +2,28 @@ import os
 from moviepy.editor import TextClip, ImageClip, CompositeVideoClip, VideoFileClip
 import concurrent.futures
 from tqdm import tqdm
+import subprocess
+import json
+
 os.environ['SDL_AUDIODRIVER'] = 'dummy'
+
+def get_video_dimensions(video_path):
+
+    # 处理 16:9
+    cmd = ["ffprobe", "-v", "error", "-select_streams", "v:0",
+           "-show_entries", "stream=width,height,sample_aspect_ratio", "-of", "json", video_path]
+    output = subprocess.check_output(cmd).decode("utf-8")
+    dimensions = json.loads(output)["streams"][0]
+
+    width = dimensions["width"]
+    height = dimensions["height"]
+    sar = dimensions.get("sample_aspect_ratio", "1:1").split(":")
+    sar = float(sar[0]) / float(sar[1])
+
+    # Calculate display width based on sample aspect ratio
+    display_width = int(width * sar)
+
+    return display_width, height
 
 def process_subtitle(args):
     i, zh_subtitle, video_file_name, base_name = args
@@ -22,9 +43,8 @@ def process_subtitle(args):
         mid_time = start_time + ((end_time - start_time) / 2)
 
         zh_text = " ".join(zh_parts[2:])
+        frame_width, frame_height = get_video_dimensions(video_file_name)
 
-        frame_height = clip.size[1]
-        frame_width = clip.size[0]
         if frame_width > frame_height:
             scale_factor = frame_width / 1920
         else:
@@ -37,12 +57,22 @@ def process_subtitle(args):
         else:
             zh_text_pos = ('center', frame_height - 30)
 
-        zh_text_clip = (TextClip(zh_text, font="Noto-Sans-Mono-CJK-SC", fontsize=zh_text_size, bg_color='black', color='yellow', stroke_width=0.25*scale_factor)
+
+# ...
+
+# Inside the function
+        if os.sys.platform == "darwin":  # Check if it's a Mac
+            font_name = "黑體-簡-中黑"
+        else:
+            font_name = "Noto-Sans-Mono-CJK-SC"
+
+        zh_text_clip = (TextClip(zh_text, font=font_name, fontsize=zh_text_size, bg_color='black', color='yellow', stroke_width=0.25*scale_factor)
             .set_duration(end_time - mid_time)  # Update duration to be from mid_time to end_time
             .set_position(zh_text_pos))
 
         frame = clip.get_frame(mid_time)  # Get the frame at mid_time instead of start_time
-        frame_clip = ImageClip(frame).set_duration(end_time - mid_time)
+        frame_clip = ImageClip(frame).set_duration(end_time - mid_time).resize((frame_width, frame_height))
+
 
         final = CompositeVideoClip([frame_clip, zh_text_clip])
         final.save_frame(f"{base_name}/{i:04}.png")
