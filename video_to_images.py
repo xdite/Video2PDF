@@ -55,7 +55,16 @@ def process_subtitle(args):
         else:
             zh_text_pos = ('center', frame_height - 30)
 
-        zh_text_clip = (TextClip(zh_text, font="黑體-簡-中黑", fontsize=zh_text_size, bg_color='black', color='yellow', stroke_width=0.25*scale_factor)
+
+# ...
+
+# Inside the function
+        if os.sys.platform == "darwin":  # Check if it's a Mac
+            font_name = "黑體-簡-中黑"
+        else:
+            font_name = "Noto-Sans-Mono-CJK-SC"
+
+        zh_text_clip = (TextClip(zh_text, font=font_name, fontsize=zh_text_size, bg_color='black', color='yellow', stroke_width=0.25*scale_factor)
             .set_duration(end_time - mid_time)  # Update duration to be from mid_time to end_time
             .set_position(zh_text_pos))
 
