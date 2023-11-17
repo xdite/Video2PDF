@@ -12,6 +12,8 @@ if __name__ == "__main__":
 
     # 擷取影片和字幕檔案
     file_name = download_video(sys.argv[1])
+    # Call the generate_srt function
+    generate_srt(file_name)
     # xxx.en.srt
     en_srt_name = file_name.replace("mp4", "srt")
     translate_srt_file(en_srt_name)
