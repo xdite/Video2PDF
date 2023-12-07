@@ -2,6 +2,7 @@ import os
 import subprocess
 import json
 from moviepy.editor import TextClip, ImageClip, CompositeVideoClip, VideoFileClip
+import concurrent.futures
 
 os.environ['SDL_AUDIODRIVER'] = 'dummy'
 
@@ -74,7 +75,10 @@ def video_to_images(video_file_name: str):
     except OSError as e:
         print(f"Failed to create directory: {base_name}. Error: {e}")
         raise
-
+    args = []
     for i, zh_subtitle in enumerate(zh_subtitles):
         start_time, end_time, zh_text = parse_subtitle(zh_subtitle)
-        process_subtitle((i, start_time, end_time, zh_text, video_file_name, base_name))
+        args.append((i, start_time, end_time, zh_text, video_file_name, base_name))
+
+    with concurrent.futures.ThreadPoolExecutor() as executor:
+        results = list(executor.map(process_subtitle, args))
