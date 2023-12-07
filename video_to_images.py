@@ -3,6 +3,7 @@ import subprocess
 import json
 from moviepy.editor import TextClip, ImageClip, CompositeVideoClip, VideoFileClip
 import concurrent.futures
+from tqdm import tqdm
 
 os.environ['SDL_AUDIODRIVER'] = 'dummy'
 
@@ -81,4 +82,7 @@ def video_to_images(video_file_name: str):
         args.append((i, start_time, end_time, zh_text, video_file_name, base_name))
 
     with concurrent.futures.ThreadPoolExecutor() as executor:
-        results = list(executor.map(process_subtitle, args))
+        futures = [executor.submit(process_subtitle, arg) for arg in args]
+
+        for f in tqdm(concurrent.futures.as_completed(futures), total=len(futures)):
+            pass  # 或者处理完成的 future，如：result = f.result()
