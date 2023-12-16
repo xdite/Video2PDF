@@ -2,8 +2,8 @@ import os
 from PIL import Image
 import shutil
 
-def convert_png_to_pdf(input_directory, output_filename):
-    output_file = output_filename + '.pdf'
+def convert_png_to_pdf(input_directory, output_filename, post_fix_filename="_text"):
+    output_file = output_filename + post_fix_filename + '.pdf'
 
     # Collect all images
     images = []
