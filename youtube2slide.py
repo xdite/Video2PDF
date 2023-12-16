@@ -32,4 +32,4 @@ if __name__ == "__main__":
     process_video_subs(file_name) # with pre-embedd-sub
     remove_duplicate_images(base_name)
     # Convert screenshots to PDF
-    convert_png_to_pdf(base_name, base_name)
+    convert_png_to_pdf(base_name, base_name, "_slide")

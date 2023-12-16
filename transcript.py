@@ -5,43 +5,54 @@ import os
 from datetime import timedelta
 import pysrt
 import sys
+from tqdm import tqdm
 
-def process_video_subs(video_name):
-    base_name = os.path.splitext(video_name)[0]  # 去除 .mp4 後綴，取得基礎檔名
+def detect_hardware_acceleration():
+    try:
+        # 尝试运行 ffmpeg 命令来列出支持的硬件加速方式
+        result = subprocess.run(['ffmpeg', '-hwaccels'], capture_output=True, text=True)
+        output = result.stdout
 
-    # 打開並解析 .srt 文件
-    subs = pysrt.open(f'{base_name}.srt')
+        # 检测 cuda 和 mps 支持
+        if 'cuda' in output:
+            return 'cuda'
+        elif 'mps' in output:
+            return 'mps'
+    except Exception as e:
+        print(f"检测硬件加速时出错: {e}")
 
-    # 建立 csv 檔
-    with open(f'{base_name}.csv', 'w', newline='') as csvfile:
-        writer = csv.writer(csvfile)
-        writer.writerow(["時間點", "字幕內容", "screenshot 照片的位置"])
+    # 如果无法检测到支持的硬件加速，返回 None
+    return None
 
-        for i, sub in enumerate(subs, 1):
-            # 取得字幕的開始和結束時間
-            start_time = timedelta(hours=sub.start.hours, minutes=sub.start.minutes, seconds=sub.start.seconds, milliseconds=sub.start.milliseconds)
-            end_time = timedelta(hours=sub.end.hours, minutes=sub.end.minutes, seconds=sub.end.seconds, milliseconds=sub.end.milliseconds)
-
-            # 計算時間中線點
-            mid_time = start_time + (end_time - start_time) / 2
-
-            # 寫入 CSV
-            filename = f"{base_name}/{i:04}.png"
-            writer.writerow([str(mid_time), sub.text, filename])
-
-    # 讀取 csv 檔
-    df = pd.read_csv(f'{base_name}.csv')
-
-    # 確保 images/ 資料夾存在
+def process_video_subs(video_path):
+    base_name = os.path.splitext(video_path)[0]
     os.makedirs(base_name, exist_ok=True)
 
-    # 迴圈讀取每個時間點
-    for i, row in df.iterrows():
-        timestamp = row['時間點']
-        filename = row['screenshot 照片的位置']
+    srt_path = f'{base_name}.srt'
+    if not os.path.exists(srt_path):
+        print(f'找不到字幕文件: {srt_path}')
+        return
 
-        # 使用 ffmpeg 截圖
-        subprocess.run(['ffmpeg', '-ss', str(timestamp), '-i', video_name, '-vframes', '1', filename])
+    subs = pysrt.open(srt_path)
 
-    # 儲存更新後的 csv 檔
-    df.to_csv(f'{base_name}.csv', index=False)
+    hw_accel = detect_hardware_acceleration()
+
+    # 使用 tqdm 包裹 subs
+    for i, sub in tqdm(enumerate(subs), total=len(subs), desc="处理中"):
+        start = timedelta(hours=sub.start.hours, minutes=sub.start.minutes, seconds=sub.start.seconds, milliseconds=sub.start.milliseconds)
+        end = timedelta(hours=sub.end.hours, minutes=sub.end.minutes, seconds=sub.end.seconds, milliseconds=sub.end.milliseconds)
+        mid_time = start + (end - start) / 2
+
+        hours, remainder = divmod(mid_time.seconds, 3600)
+        minutes, seconds = divmod(remainder, 60)
+        timestamp = '{:02}:{:02}:{:02}.{:03}'.format(hours, minutes, seconds, mid_time.microseconds // 1000)
+
+        screenshot_filename = os.path.join(base_name, f'{i+1:04}.png')
+
+        ffmpeg_cmd = ['ffmpeg', '-loglevel', 'error', '-ss', timestamp, '-i', video_path, '-vframes', '1', '-pix_fmt', 'yuv420p', screenshot_filename]
+
+        if hw_accel:
+            ffmpeg_cmd.insert(1, '-hwaccel')
+            ffmpeg_cmd.insert(2, hw_accel)
+
+        subprocess.run(ffmpeg_cmd)

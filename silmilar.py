@@ -34,8 +34,4 @@ def remove_duplicate_images(image_folder, hash_size=12, sim_threshold=10):
     # Optionally, remove the identified duplicate images
     for duplicate in duplicates:
         os.remove(duplicate)
-        print(f"Removed duplicate image: {duplicate}")
-
-# Example usage
-image_folder_path = 'aa'
-remove_duplicate_images(image_folder_path)
+        #print(f"Removed duplicate image: {duplicate}")
